@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b7f86">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>QAZAQ POP-UP — Орнату</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Nunito,"Segoe UI",system-ui,-apple-system,Arial,sans-serif;color:#2c2420;
+  background:linear-gradient(180deg,#12a7ad,#0b7f86);display:flex;flex-direction:column;align-items:center;padding:64px 16px calc(28px + env(safe-area-inset-bottom))}
+.band{position:fixed;left:0;right:0;height:12px;background:#5b3d2e;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 9c4 0 4-6 8-6s3 4 0 4M24 9c-4 0-4-6-8-6s-3 4 0 4' fill='none' stroke='%23f5c242' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
+.band.t{top:0}.band.b{bottom:0}
+.logo{width:110px;height:110px;border-radius:28px;box-shadow:0 8px 0 rgba(0,0,0,.18);margin-top:10px}
+h1{color:#fff;font-size:2rem;margin:16px 0 2px;letter-spacing:1px;text-align:center}
+h1 b{color:#f5c242}
+.sub{color:#dff8f5;margin:0 0 22px;text-align:center;font-weight:700}
+.card{background:#fffaf0;border-radius:24px;padding:20px;width:100%;max-width:440px;box-shadow:0 8px 0 rgba(62,42,32,.25)}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:18px;padding:16px;font:inherit;font-size:1.1rem;font-weight:900;
+  text-decoration:none;cursor:pointer;margin-top:12px}
+.gold{background:#f5c242;color:#3e2a20;box-shadow:0 6px 0 #c8901f}
+.teal{background:#0b8a8f;color:#fff;box-shadow:0 6px 0 #06646a}
+.ghost{background:#f1e6d2;color:#5b3d2e;box-shadow:0 6px 0 #d9c7a6}
+.btn:active{transform:translateY(3px)}
+.hidden{display:none!important}
+h2{margin:0 0 6px;color:#3e2a20;font-size:1.2rem}
+ol{margin:8px 0 0;padding-left:22px;line-height:1.7;font-weight:700}
+.note{font-size:.88rem;color:#7a6a5d;margin-top:14px;line-height:1.5}
+.lang{position:fixed;top:20px;right:14px;display:flex;border:2px solid rgba(255,255,255,.4);border-radius:12px;overflow:hidden}
+.lang button{background:transparent;color:#fff;border:0;padding:6px 10px;font:inherit;font-weight:900;font-size:.8rem}
+.lang button[aria-pressed=true]{background:#f5c242;color:#3e2a20}
+</style>
+</head>
+<body>
+<div class="band t"></div><div class="band b"></div>
+<div class="lang"><button data-l="kk" aria-pressed="true">ҚАЗ</button><button data-l="en" aria-pressed="false">ENG</button></div>
+
+<img class="logo" src="icons/icon-512.png" alt="QAZAQ POP-UP">
+<h1>QAZAQ <b>POP-UP</b></h1>
+<p class="sub" data-t="sub"></p>
+
+<div class="card">
+  <!-- Android -->
+  <div id="android" class="hidden">
+    <h2 data-t="and_h"></h2>
+    <a id="apk" class="btn gold hidden" href="qazaq-popup.apk" download><span>🤖</span><span data-t="apk"></span></a>
+    <button id="pwa" class="btn teal hidden"><span>📲</span><span data-t="pwa"></span></button>
+    <p class="note" id="apk-note" data-t="apk_note"></p>
+  </div>
+  <!-- iPhone -->
+  <div id="ios" class="hidden">
+    <h2 data-t="ios_h"></h2>
+    <ol><li data-t="ios1"></li><li data-t="ios2"></li><li data-t="ios3"></li></ol>
+  </div>
+  <!-- Computer / other -->
+  <div id="other" class="hidden">
+    <h2 data-t="pc_h"></h2>
+    <p class="note" style="margin-top:4px" data-t="pc_p"></p>
+  </div>
+  <a class="btn ghost" href="index.html#map"><span>🗺️</span><span data-t="open"></span></a>
+</div>
+
+<script>
+(function(){
+var T={
+kk:{sub:'Қазақстанды таны! Карта · Тарих · Табиғат · Мәдениет · Ойындар',
+ and_h:'Android телефонға орнату', apk:'APK жүктеп, орнату', pwa:'Қосымшаны орнату',
+ apk_note:'APK жүктелген соң файлды ашыңыз. Телефон «белгісіз көздерден орнатуға» рұқсат сұраса — рұқсат беріңіз.',
+ pwa_note:'Батырманы басқанда қосымша басты экранға орнатылады. Батырма жұмыс істемесе: Chrome мәзірі ⋮ → «Қолданбаны орнату».',
+ ios_h:'iPhone-ға орнату', ios1:'Осы бетті <b>Safari</b>-де ашыңыз', ios2:'Төмендегі «Бөлісу» батырмасын басыңыз ⬆️', ios3:'«<b>Басты экранға қосу</b>» (На экран «Домой») таңдаңыз',
+ pc_h:'Телефонмен сканерлеңіз', pc_p:'Бұл бетті телефонда ашсаңыз, қосымшаны орнату батырмасы шығады. Компьютерде қосымшаны бірден ашуға болады.',
+ open:'Қосымшаны ашу', installed:'✅ Орнатылды!'},
+en:{sub:'Discover Kazakhstan! Map · History · Nature · Culture · Games',
+ and_h:'Install on Android', apk:'Download & install APK', pwa:'Install the app',
+ apk_note:'After the APK downloads, open the file. If the phone asks to allow installing from unknown sources, allow it.',
+ pwa_note:'Tap the button to add the app to your home screen. If it does not work: Chrome menu ⋮ → "Install app".',
+ ios_h:'Install on iPhone', ios1:'Open this page in <b>Safari</b>', ios2:'Tap the Share button ⬆️ at the bottom', ios3:'Choose "<b>Add to Home Screen</b>"',
+ pc_h:'Scan with your phone', pc_p:'Open this page on your phone to get the install button. On a computer you can open the app right away.',
+ open:'Open the app', installed:'✅ Installed!'}};
+var lang='kk'; try{ if(localStorage.getItem('qazaq-lang')==='en') lang='en'; }catch(e){}
+var ua=navigator.userAgent, isAndroid=/android/i.test(ua), isIOS=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+var hasApk=false, prompt=null;
+function $(id){return document.getElementById(id);}
+function render(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-t]').forEach(function(el){ el.innerHTML=T[lang][el.getAttribute('data-t')]; });
+  document.querySelectorAll('.lang button').forEach(function(b){ b.setAttribute('aria-pressed',b.getAttribute('data-l')===lang); });
+  $('android').classList.toggle('hidden',!isAndroid);
+  $('ios').classList.toggle('hidden',!isIOS);
+  $('other').classList.toggle('hidden',isAndroid||isIOS);
+  $('apk').classList.toggle('hidden',!hasApk);
+  $('pwa').classList.toggle('hidden',hasApk&&!prompt);
+  $('apk-note').innerHTML=hasApk?T[lang].apk_note:T[lang].pwa_note;
+}
+document.querySelectorAll('.lang button').forEach(function(b){ b.onclick=function(){ lang=b.getAttribute('data-l'); try{localStorage.setItem('qazaq-lang',lang);}catch(e){} render(); }; });
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); prompt=e; render(); });
+window.addEventListener('appinstalled',function(){ $('pwa').innerHTML=T[lang].installed; });
+$('pwa').onclick=function(){
+  if(prompt){ prompt.prompt(); prompt.userChoice.finally(function(){ prompt=null; render(); }); }
+  else location.href='index.html#map';
+};
+// APK бар ма? Болса — APK батырмасын көрсету
+fetch('qazaq-popup.apk',{method:'HEAD',cache:'no-store'}).then(function(r){
+  var ct=r.headers.get('content-type')||''; hasApk=r.ok&&!/text\/html/.test(ct); render();
+}).catch(function(){ render(); });
+render();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});
+})();
+</script>
+</body>
