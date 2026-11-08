@@ -48,6 +48,7 @@ button{font:inherit;cursor:pointer}
   display:flex;align-items:center;gap:6px;font-weight:800;font-size:.86rem;white-space:nowrap}
 .chip i{font-style:normal;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--brown-d);font-size:.8rem}
 .iconbtn{width:40px;height:40px;border-radius:12px;border:0;background:rgba(255,255,255,.18);color:#fff;font-size:1.15rem;display:grid;place-items:center}
+.iconbtn[aria-pressed=false]{opacity:.55}
 .band{height:12px;margin:0 -14px;background:var(--brown);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 9c4 0 4-6 8-6s3 4 0 4M24 9c-4 0-4-6-8-6s-3 4 0 4' fill='none' stroke='%23f5c242' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")}
 
@@ -298,6 +299,19 @@ button,.tab,.pin{-webkit-user-select:none;user-select:none;touch-action:manipula
 .ios-steps div{background:#fff;border-radius:14px;padding:12px 14px;font-weight:800;display:flex;gap:12px;align-items:center;box-shadow:0 3px 0 rgba(62,42,32,.1)}
 .ios-steps b{width:30px;height:30px;border-radius:50%;background:var(--gold);display:grid;place-items:center;flex:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- кіру экраны (музыка) ---- */
+.splash{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center;color:#fff;
+  background:radial-gradient(circle at 50% 35%,var(--teal) 0%,var(--teal-d) 55%,var(--brown-d) 100%);transition:opacity .5s,visibility .5s}
+.splash.gone{opacity:0;visibility:hidden;pointer-events:none}
+.splash svg{width:150px;height:150px;animation:spl-spin 30s linear infinite}
+@keyframes spl-spin{to{transform:rotate(360deg)}}
+.splash h2{margin:0;font-size:2rem;font-weight:900;letter-spacing:1px}
+.splash h2 b{color:var(--gold)}
+.splash p{margin:0;opacity:.85;font-size:.95rem}
+.splash .go{border:0;border-radius:18px;background:var(--gold);color:var(--brown-d);font:inherit;font-weight:900;font-size:1.25rem;padding:16px 38px;box-shadow:0 6px 0 var(--gold-d);cursor:pointer}
+.splash .go:active{transform:translateY(4px);box-shadow:0 2px 0 var(--gold-d)}
+.splash .mute{background:none;border:0;color:#fff;opacity:.75;font:inherit;font-size:.9rem;text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
@@ -327,6 +341,14 @@ button,.tab,.pin{-webkit-user-select:none;user-select:none;touch-action:manipula
   </defs>
 </svg>
 
+<div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="spl-h">
+  <svg aria-hidden="true"><use href="#rosette"/></svg>
+  <h2 id="spl-h">QAZAQ <b>POP-UP</b></h2>
+  <p id="spl-song">🎵 Секен Тұрысбеков — «Көңіл толқыны»</p>
+  <button type="button" class="go" id="spl-go">▶ Бастау</button>
+  <button type="button" class="mute" id="spl-mute">Дыбыссыз кіру</button>
+</div>
+
 <header class="hud">
   <div class="hud-row">
     <div class="logo"><svg aria-hidden="true"><use href="#orn"/></svg><span>QAZAQ <b>POP-UP</b></span></div>
@@ -334,6 +356,7 @@ button,.tab,.pin{-webkit-user-select:none;user-select:none;touch-action:manipula
       <div class="chip lv"><i>⭐</i><span id="hud-lv">1</span></div>
       <div class="chip"><i>🏆</i><span id="hud-pts">0</span></div>
       <div class="lang" role="group" aria-label="Тіл / Language"><button type="button" data-lang="kk" aria-pressed="true">ҚАЗ</button><button type="button" data-lang="en" aria-pressed="false">ENG</button></div>
+      <button class="iconbtn" id="btn-music" type="button" aria-pressed="true" data-ta="music_label">🔊</button>
       <button class="iconbtn" id="btn-search" data-ta="search_label">🔍</button>
     </div>
   </div>
@@ -836,7 +859,7 @@ var FACTS = [
 var T = {
 kk:{
  title:'QAZAQ POP-UP | Қазақстанды таны!',
- search_label:'Іздеу', map_label:'Қазақстанның интерактивті картасы', nav_label:'Негізгі мәзір',
+ search_label:'Іздеу', music_label:'Музыка', map_label:'Қазақстанның интерактивті картасы', nav_label:'Негізгі мәзір',
  hero_h:'Ұлы Дала <span>картасы</span>',
  hero_p:'Картадан облысты немесе қаланы бас — тарихы, көрікті жерлері, табиғаты мен мәдениеті ашылады.',
  prog:function(n,t){return 'Ашылған өңірлер: '+n+' / '+t+(n===t?' — Жарайсың, бүкіл елді араладың! 🏆':'');},
@@ -883,7 +906,7 @@ kk:{
 },
 en:{
  title:'QAZAQ POP-UP | Discover Kazakhstan!',
- search_label:'Search', map_label:'Interactive map of Kazakhstan', nav_label:'Main menu',
+ search_label:'Search', music_label:'Music', map_label:'Interactive map of Kazakhstan', nav_label:'Main menu',
  hero_h:'Great Steppe <span>Map</span>',
  hero_p:'Tap a region or city on the map to discover its history, sights, nature and culture.',
  prog:function(n,t){return 'Regions discovered: '+n+' / '+t+(n===t?' — Well done, you have explored the whole country! 🏆':'');},
@@ -1718,6 +1741,38 @@ window.addEventListener('beforeinstallprompt',function(){ var p=$('sh-inst-p'); 
 renderAll();
 go(wantInstall?'map':(location.hash||'#map').slice(1),true);
 if(wantInstall) setTimeout(openInstallSheet,400);
+})();
+</script>
+<audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+<script>
+/* ==================== MUSIC (Секен Тұрысбеков — «Көңіл толқыны») ==================== */
+(function(){
+  var a=document.getElementById('bgm'), btn=document.getElementById('btn-music'),
+      sp=document.getElementById('splash'), go=document.getElementById('spl-go'), mute=document.getElementById('spl-mute');
+  if(!a||!btn) return;
+  a.volume=0.35;
+  var on=true, en=false;
+  try{ on=localStorage.getItem('qazaq-music')!=='0'; en=localStorage.getItem('qazaq-lang')==='en'; }catch(e){}
+  if(en){ go.textContent='▶ Start'; mute.textContent='Enter without sound'; }
+  function ui(){ btn.textContent=on?'🔊':'🔇'; btn.setAttribute('aria-pressed',on?'true':'false'); }
+  function save(){ try{ localStorage.setItem('qazaq-music',on?'1':'0'); }catch(e){} }
+  function play(){ if(!on) return Promise.resolve(false); var p=a.play(); return (p&&p.then)?p.then(function(){return true},function(){return false}):Promise.resolve(true); }
+  function hide(){ if(sp){ sp.classList.add('gone'); setTimeout(function(){ sp.remove(); },600); } }
+
+  // Кіру экраны: «Бастау» басылғанда музыка қосылады
+  go.addEventListener('click',function(){ on=true; save(); ui(); play(); hide(); });
+  mute.addEventListener('click',function(){ on=false; save(); ui(); a.pause(); hide(); });
+
+  // Дыбысты өшірген адамға кіру экранын көрсетпейміз
+  if(!on){ hide(); }
+  else {
+    // Браузер рұқсат етсе — бірден ойнайды, экран қажет емес
+    play().then(function(ok){ if(ok) hide(); });
+  }
+
+  btn.addEventListener('click',function(){ on=!on; save(); ui(); if(on) play(); else a.pause(); });
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) a.pause(); else if(!sp||!document.body.contains(sp)||sp.classList.contains('gone')) play(); });
+  ui();
 })();
 </script>
 <script>
