@@ -1,6 +1,6 @@
 /* QAZAQ POP-UP service worker — офлайн режим.
    Файлдарды жаңартқан сайын CACHE нұсқасын өзгертіңіз (v3 → v4), сонда телефондар жаңа нұсқаны алады. */
-const CACHE = 'qazaq-popup-v11';
+const CACHE = 'qazaq-popup-v12';
 const SHELL = [
   './', './index.html', './install.html', './manifest.json',
   './icon-192.png', './icon-512.png',
@@ -94,6 +94,9 @@ self.addEventListener('fetch', e => {
 
   // APK файлы — кэшке салмай, тікелей желіден
   if (url.pathname.endsWith('.apk')) return;
+
+  // Музыка (mp3) — тікелей желіден (iPhone-да Range сұраулары кэшпен бұзылмас үшін)
+  if (url.pathname.endsWith('.mp3')) return;
 
   // HTML беттер: алдымен желі (жаңа нұсқа), болмаса кэш
   if (req.mode === 'navigate') {
